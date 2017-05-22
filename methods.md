@@ -18,9 +18,10 @@
 
 > ### 注意json数据格式的转换，以及 res.end/send 数据要求
 
-# 防止文件命名重复
+## 防止文件命名重复
 
-## UUID
+### UUID
+
 ```JavaScript
 // UUID 处理
     function guid() {
@@ -31,3 +32,7 @@
       });
     }
 ```
+
+## 表单数据的处理
+
+> ### 采用 XMLHttpRequest 2 的新API Formdata处理表单
