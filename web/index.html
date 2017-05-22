@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>二维码推广地址</title>
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta content="always" name="referrer">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="stylesheet" href="//cdn.yuelu.net/bootstrap/3.3.1/css/bootstrap.min.css"/>
+  <style>
+    .app {
+      width: 600px;
+      height: 600px;
+      margin: 0 auto;
+    }
+    .outside_url, .img_url, .two_code {
+      width: 600px;
+      height: 20px;
+    }
+    .pre {
+      word-wrap: break-word;
+      font-size: 30px;
+      text-align: center;
+    }
+    .file_up {
+      display: inline-block !important;
+      margin-right: 100px;
+    }
+    .btn-primary {
+      /*width: 80px;*/
+      height: 30px;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    .form {
+      text-align: center;
+    }
+    .cover {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background-color: rgba(0,0,0,.8);
+      display: none;
+    }
+    .cover_content {
+      width: 600px;
+      height: 400px;
+      /*height: 600px;*/
+      margin: 100px auto;
+      text-align: center;
+      /*line-height: 400px;*/
+      font-size: 20px;
+      position: relative;
+      background-color: #fff;
+      word-wrap: break-word;
+    }
+    i {
+      width: 20px;
+      height: 20px;
+      top: 13px;
+      right: -18px;
+      position: absolute;
+      line-height: 0;
+      font-size: 20px;
+      cursor: pointer;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style='text-align: center'>二维码上传地址</h1>
+    <div class="form-group">
+      <label for="outside_url"><h3>推广地址</h3></label>
+      <input type="text" placeholder="外部对接地址" class="form-control" id="outside_url" />
+      <br>
+      <br>
+      <label for="two_code"><h3>二维码名称</h3></label>
+      <input type="text" placeholder="二维码名称" class="form-control" id="two_code">
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form class="form" action="#" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" class='file_up'>
+      <input type="button" class='btn-primary' value="上传并产生二维码推广地址"></button>
+    </form>  
+  </div>
+  <div class="cover">
+    <div class="cover_content">
+      <div class='content'></div>
+      <i>X</i>
+    </div>
+  </div>
+  <script src="//cdn.yuelu.net/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+    function _(e) {
+      return document.querySelector(e);
+    }
+    let smt = _('input[type=button]');
+    let form = _('.form');
+    let imgURL = '';
+    let btn = _(".btn");
+    let spread = _('#outside_url');
+    let twoCode = _('#two_code');
+    let concat = _('.content');
+    let fileUp = _('.file_up')
+    let cover = _('.cover')
+    let i = _('i')
+    i.addEventListener('click', () => {
+      cover.style.display = 'none'
+    })
+    smt.addEventListener('click', function (e){
+      cover.style.display = 'block'
+      e.preventDefault();
+      if(!fileUp.value || !spread.value || !twoCode.value) {
+        concat.innerHTML = '请将推广地址，二维码名称以及二维码图片填写完整';
+      }else {
+        let formData = new FormData(form);
+        $.ajax({
+          type: 'POST',
+          url: '/FileUpLoad',
+          data: formData,
+          // 对data数据不做处理
+          processData: false,
+          // 不使用content-type，使用multipart/form-data
+          contentType: false,
+          success: function(data){
+            let imgData = JSON.parse(data)
+            let imageNewUrl = encodeURIComponent(imgData.image_newUrl);
+            let twoCodeValue = encodeURIComponent(twoCode.value);
+            let str = spread.value + '&qrcode_url=' + imageNewUrl + '&offical_accout_name=' + twoCodeValue;
+            // 处理中文
+            // str = encodeURIComponent(str);
+            concat.innerHTML = str;
+          }
+        })
+      }
+    })
+  </script>
+</body>
+</html>
