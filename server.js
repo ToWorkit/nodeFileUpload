@@ -4,9 +4,6 @@ let express = require('express'),
   fs = require('fs'),
   app = express();
 
-// 开放静态文件
-// /www/promotions.yueloo.com
-app.use(express.static(path.join('/www/promotions.yueloo.com', 'upload')));
 let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // 文件初始路径
@@ -38,17 +35,19 @@ let storage = multer.diskStorage({
 })
 
 let upload = multer({ storage: storage })
+// 表单的name
 let uploadSingle = upload.single('file')
 
 app.get('/', (req, res) => {
+  // 响应页面
   res.sendFile(path.join(__dirname, '/web/index.html'))
 })
 
 app.post('/FileUpLoad', (req, res, next) => {
+  // 处理表单数据
   uploadSingle(req, res, (err) => {
     if (err) return
     var file = req.file
-      // console.log(req.file)
     function getTime() {
       let date = new Date();
       let y = date.getFullYear();
@@ -56,30 +55,20 @@ app.post('/FileUpLoad', (req, res, next) => {
       let d = date.getDate();
       return y + '-' + m + '-' + d;
     }
-    // data = JSON.parse(data)
     let simpleImageData = {
       "image_time": getTime(),
       "image_originUrl": file.originalname,
-      "image_newUrl": 'http://promotions.yueloo.com/upload/' + file.filename
+      "image_newUrl": 'http://127.0.0.1:8083/upload/' + file.filename
     }
+    // 处理单条数据
     simpleImageData = JSON.stringify(simpleImageData)
-
+    // 使用appendFile追加数据做统计
     fs.appendFile('./data.json', simpleImageData, (err) => {
       if (err) {
         throw err
       }
-
-      // data.imageData.push(simpleImageData);
-      // 写入 data.json
-      // data = JSON.stringify(data);
-      // fs.writeFile('./data.json', data, (err) => {
-      //   if(err) {
-      //     return err
-      //   }
-      // })
     })
     res.send(simpleImageData)
-      // simpleImageData = JSON.stringify(simpleImageData)
   })
 })
 
