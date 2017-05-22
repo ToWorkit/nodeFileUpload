@@ -35,4 +35,11 @@
 
 ## 表单数据的处理
 
-> ### 采用 XMLHttpRequest 2 的新API Formdata处理表单
+> ### 采用 XMLHttpRequest 2 的新API [Formdata](https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/Using_FormData_Objects)处理表单
+
+# node 的多进程
+
+> ### 使用[pm2](http://pm2.keymetrics.io/)通过配置可以开启多个node程序，并且窗口关闭后依然可以正常使用，结束方法为 命令 pm2 stop 'fileName' 详情参考官网
+
+[https://developer.mozilla.org/zh-CN/docs/Web/API/FormData/Using_FormData_Objects]: 
+[http://pm2.keymetrics.io/]: 
